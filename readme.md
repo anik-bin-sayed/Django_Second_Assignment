@@ -17,15 +17,21 @@ Visit the app: http://127.0.0.1:8000/
 
 All UI screenshots are:
 
+## Home Page
 ![Home](Blog_Site/media/screenshots/Home.png)
 
+## All Category Page
 ![All category](Blog_Site/media/screenshots/All_category.png)
 
+## Create Category
 ![Create category](Blog_Site/media/screenshots/Create_category.png)
 
+## Dashboard
 ![Dashboard](Blog_Site/media/screenshots/Dashboard.png)
 
+## Details One
 ![Details Page ](Blog_Site/media/screenshots/Details1.png)
 
+## Details Twos
 ![Details page 2](Blog_Site/media/screenshots/Details2.png)
 
