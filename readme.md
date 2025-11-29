@@ -17,6 +17,12 @@ Visit the app: http://127.0.0.1:8000/
 
 All UI screenshots are:
 
+## Register Page
+![Login](Blog_Site/media/screenshots/Register.png)
+
+## Login Page
+![Login](Blog_Site/media/screenshots/Login.png)
+
 ## Home Page
 ![Home](Blog_Site/media/screenshots/Home.png)
 
