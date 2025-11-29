@@ -1,0 +1,122 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}{{ post.title }} - My Blog{% endblock %}
+
+{% block content %}
+<article>
+    <!-- Post Header -->
+    <header class="mb-4">
+        {% if post.feature_image %}
+        <img src="{{ post.feature_image.url }}" class="img-fluid rounded mb-3" alt="{{ post.title }}">
+        {% else %}
+        <p>No Image Found</p>
+        {% endif %}
+        
+        <h1 class="fw-bolder mb-1">{{ post.title }}</h1>
+        
+        <div class="text-muted fst-italic mb-2">
+            Posted by {{ post.author.username }} on {{ post.published_at|date:"F d, Y" }}
+        </div>
+        
+        <!-- Category -->
+        <div class="mb-2">
+            <strong>Category:</strong>
+            {% if post.category %}
+            <a href="{% url 'category_posts' post.category.slug %}" class="badge bg-primary text-decoration-none me-1">
+                {{ post.category.name }}
+            </a>
+            {% else %}
+            <span class="text-muted">No category</span>
+            {% endif %}
+        </div>
+        
+        <!-- Tags -->
+        <div class="mb-3">
+            {% for tag in post.tags.all %}
+            <a href="{% url 'tagged_posts' tag.slug %}" class="badge bg-secondary text-decoration-none me-1">
+                {{ tag.name }}
+            </a>
+            {% empty %}
+            <span class="text-muted">No tags</span>
+            {% endfor %}
+        </div>
+        
+        {% if user == post.author %}
+        <div class="mb-3">
+            <a href="{% url 'post_update' post.slug %}" class="btn btn-warning btn-sm">Edit</a>
+            <a href="{% url 'post_delete' post.slug %}" class="btn btn-danger btn-sm">Delete</a>
+        </div>
+        {% endif %}
+    </header>
+
+    <!-- Post Content -->
+    <section class="mb-5">
+        <div class="fs-5 mb-4">
+            {{ post.content|linebreaks }}
+        </div>
+    </section>
+
+    <!-- Like Section -->
+    <section class="mb-5">
+        <div class="card bg-light">
+            <div class="card-body">
+                <h5 class="card-title">
+                    {% if user_has_liked %}❤️{% else %}🤍{% endif %}
+                    {{ like_count }} Likes
+                </h5>
+                {% if user.is_authenticated %}
+                <form method="POST" action="{% url 'like_post' post.slug %}">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-outline-primary btn-sm">
+                        {% if user_has_liked %}Unlike{% else %}Like{% endif %}
+                    </button>
+                </form>
+                {% endif %}
+            </div>
+        </div>
+    </section>
+
+    <!-- Comments Section -->
+    <section class="mb-5">
+        <div class="card bg-light">
+            <div class="card-body">
+                <h4 class="card-title">Comments ({{ comments.count }})</h4>
+
+                <!-- Comment Form -->
+                {% if user.is_authenticated %}
+                <div class="mb-4">
+                    <h5>Add a comment:</h5>
+                    <form method="POST" action="{% url 'add_comment' post.slug %}">
+                        {% csrf_token %}
+                        {{ comment_form|crispy }}
+                        <button type="submit" class="btn btn-primary btn-sm mt-2">Add Comment</button>
+                    </form>
+                </div>
+                {% endif %}
+
+                <!-- Comments List -->
+                <div class="mt-4">
+                    {% for comment in comments %}
+                    <div class="d-flex mb-4">
+                        <div class="flex-shrink-0">
+                            <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center" 
+                                 style="width: 40px; height: 40px;">
+                                {{ comment.author.username|first|upper }}
+                            </div>
+                        </div>
+                        <div class="ms-3">
+                            <div class="fw-bold">{{ comment.author.username }}</div>
+                            <small class="text-muted">{{ comment.created_at|timesince }} ago</small>
+                            <p class="mb-1">{{ comment.content }}</p>
+                        </div>
+                    </div>
+                    {% empty %}
+                    <p class="text-muted">No comments yet. Be the first to comment!</p>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </section>
+</article>
+{% endblock %}
